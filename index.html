@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thrift Shop</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Press+Start+2P&family=Rubik+Glitch&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Thrift Shop</h1>
+            <form id="search-form" class="search-form">
+                <div style="position: relative;">
+                    <i class="fas fa-search" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); color: gray;"></i>
+                    <input type="text" id="search-input" placeholder="Cari produk..." onkeyup="searchProducts()" style="padding-left: 30px;">
+                </div>
+            </form>
+            
+            <div class="user-actions">
+                <!-- User Menu -->
+                <div class="user-menu">
+                    <button class="user-menu-btn"><i class="fas fa-user-cog"></i></button>
+                    <div id="user-menu" class="user-menu-content">
+                        <!-- Content will be filled by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="cart" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count">0</span> item
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!--Pencarian produk-->
+<div id="search-results-message" class="hidden">
+    <p class="not-found-message">Maaf, produk yang Anda cari tidak tersedia</p>
+</div>
+
+    <!-- Modal Keranjang -->
+    <div id="cart-modal" class="cart-modal hidden">
+        <h3>Keranjang Belanja</h3>
+        <ul id="cart-items"></ul>
+        <div class="cart-total">
+            <strong>Total: Rp <span id="cart-total-price">0</span></strong>
+        </div>
+        <button id="buy-now" onclick="buyNow()">Beli Sekarang</button>
+        <button class="close-cart" onclick="closeCart()">Tutup</button>
+    </div>
+
+    <main class="container">
+        <div class="products">
+            <div class="product-card" 
+                    data-id="1" 
+                    data-name="Kaos trend" 
+                    data-price="100000" 
+                    data-image="https://images.tokopedia.net/img/cache/700/VqbcmM/2022/7/8/06d9be75-ed8d-472e-bfcb-17abace43f4e.jpg" 
+                    data-description="Kaos trendy dengan bahan katun premium yang nyaman dipakai seharian. Tersedia dalam berbagai ukuran dan warna. Cocok untuk acara kasual maupun semi-formal.">
+            <img src="https://images.tokopedia.net/img/cache/700/VqbcmM/2022/7/8/06d9be75-ed8d-472e-bfcb-17abace43f4e.jpg" alt="Kaos Trend">
+            <h2>Kaos trend</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 100.000</p>
+            <button class="buy-now-btn"
+                    data-id="1"
+                    data-name="Kaos trend"
+                    data-price="100000"
+                    data-image="https://images.tokopedia.net/img/cache/700/VqbcmM/2022/7/8/06d9be75-ed8d-472e-bfcb-17abace43f4e.jpg" 
+                    onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="1" 
+                    data-name="Kaos trend" 
+                    data-price="100000" 
+                    data-image="https://images.tokopedia.net/img/cache/700/VqbcmM/2022/7/8/06d9be75-ed8d-472e-bfcb-17abace43f4e.jpg" 
+                    onclick="addToCart(event)">Tambah ke Keranjang</button>
+        </div>
+
+            <div class="product-card" 
+            data-id="2" 
+            data-name="Celana Trend" 
+            data-price="120000" 
+            data-image="https://areioutdoorgear.co.id/wp-content/uploads/2023/09/WhatsApp-Image-2023-08-18-at-16.55.56-2-600x600-1.jpeg" 
+            data-description="Celana trendy dengan bahan nyaman untuk aktivitas sehari-hari. Tersedia dalam berbagai ukuran dan warna.">
+        <img src="https://areioutdoorgear.co.id/wp-content/uploads/2023/09/WhatsApp-Image-2023-08-18-at-16.55.56-2-600x600-1.jpeg" alt="Celana Trend">
+        <h2>Celana Trend</h2>
+        <h5><i class="fas fa-ruler"></i> All Size</h5>
+        <p class="price">Rp 120.000</p>
+        <button class="buy-now-btn"
+                data-id="2"
+                data-name="Celana Trend"
+                data-price="120000"
+                data-image="https://areioutdoorgear.co.id/wp-content/uploads/2023/09/WhatsApp-Image-2023-08-18-at-16.55.56-2-600x600-1.jpeg" 
+                onclick="buyNowSingle(event)">Beli Sekarang</button>
+        <button data-id="2" 
+                data-name="Celana Trend" 
+                data-price="120000" 
+                data-image="https://areioutdoorgear.co.id/wp-content/uploads/2023/09/WhatsApp-Image-2023-08-18-at-16.55.56-2-600x600-1.jpeg" 
+                onclick="addToCart(event)">Tambah ke Keranjang</button>
+    </div>
+    
+    <div class="product-card" 
+            data-id="3" 
+            data-name="Topi Premium" 
+            data-price="79000" 
+            data-image="https://images.tokopedia.net/img/cache/700/VqbcmM/2022/2/28/2023f9c5-fd1e-45a7-80a7-e52ce3b463cb.jpg" 
+            data-description="Topi premium dengan desain stylish dan bahan berkualitas tinggi.">
+        <img src="https://images.tokopedia.net/img/cache/700/VqbcmM/2022/2/28/2023f9c5-fd1e-45a7-80a7-e52ce3b463cb.jpg" alt="Topi Premium">
+        <h2>Topi Premium</h2>
+        <p class="price">Rp 79.000</p>
+        <button class="buy-now-btn"
+                data-id="3"
+                data-name="Topi Premium"
+                data-price="79000"
+                data-image="https://images.tokopedia.net/img/cache/700/VqbcmM/2022/2/28/2023f9c5-fd1e-45a7-80a7-e52ce3b463cb.jpg" 
+                onclick="buyNowSingle(event)">Beli Sekarang</button>
+        <button data-id="3" 
+                data-name="Topi Premium" 
+                data-price="79000" 
+                data-image="https://images.tokopedia.net/img/cache/700/VqbcmM/2022/2/28/2023f9c5-fd1e-45a7-80a7-e52ce3b463cb.jpg" 
+                onclick="addToCart(event)">Tambah ke Keranjang</button>
+    </div>
+    
+    <div class="product-card" 
+            data-id="4" 
+            data-name="Kemeja Flanel" 
+            data-price="110000" 
+            data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//108/MTA-47933973/lokal_kemeja_flanel_pria_distro_lengan_panjang_kualitas_premium-_kemeja_kotak_kotak_unisex_full22_ea222e5d.jpg" 
+            data-description="Kemeja flanel dengan bahan nyaman dan desain kotak-kotak yang stylish.">
+        <img src="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//108/MTA-47933973/lokal_kemeja_flanel_pria_distro_lengan_panjang_kualitas_premium-_kemeja_kotak_kotak_unisex_full22_ea222e5d.jpg" alt="Kemeja Flanel">
+        <h2>Kemeja Flanel</h2>
+        <h5><i class="fas fa-ruler"></i> All Size</h5>
+        <p class="price">Rp 110.000</p>
+        <button class="buy-now-btn"
+                data-id="4"
+                data-name="Kemeja Flanel"
+                data-price="110000"
+                data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//108/MTA-47933973/lokal_kemeja_flanel_pria_distro_lengan_panjang_kualitas_premium-_kemeja_kotak_kotak_unisex_full22_ea222e5d.jpg" 
+                onclick="buyNowSingle(event)">Beli Sekarang</button>
+        <button data-id="4" 
+                data-name="Kemeja Flanel" 
+                data-price="110000" 
+                data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//108/MTA-47933973/lokal_kemeja_flanel_pria_distro_lengan_panjang_kualitas_premium-_kemeja_kotak_kotak_unisex_full22_ea222e5d.jpg" 
+                onclick="addToCart(event)">Tambah ke Keranjang</button>
+    </div>
+    
+    <!-- Product 5 -->
+    <div class="product-card" 
+            data-id="5" 
+            data-name="Hoodie" 
+            data-price="169000" 
+            data-image="https://down-id.img.susercontent.com/file/id-11134207-7r992-lqxt73zgq3r1f4" 
+            data-description="Hoodie dengan bahan nyaman dan desain modern untuk gaya kasual sehari-hari.">
+        <img src="https://down-id.img.susercontent.com/file/id-11134207-7r992-lqxt73zgq3r1f4" alt="Hoodie">
+        <h2>Hoodie</h2>
+        <h5><i class="fas fa-ruler"></i> All Size</h5>
+        <p class="price">Rp 169.000</p>
+        <button class="buy-now-btn"
+                data-id="5"
+                data-name="Hoodie"
+                data-price="169000"
+                data-image="https://down-id.img.susercontent.com/file/id-11134207-7r992-lqxt73zgq3r1f4" 
+                onclick="buyNowSingle(event)">Beli Sekarang</button>
+        <button data-id="5" 
+                data-name="Hoodie" 
+                data-price="169000" 
+                data-image="https://down-id.img.susercontent.com/file/id-11134207-7r992-lqxt73zgq3r1f4" 
+                onclick="addToCart(event)">Tambah ke Keranjang</button>
+    </div>
+    
+    <!-- Product 6 -->
+    <div class="product-card" 
+            data-id="6" 
+            data-name="Celana Denim Trend" 
+            data-price="120000" 
+            data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full/catalog-image/95/MTA-178144322/brd-44261_rockmaker-celana-denim-selvedge-accent-rebel-34_full01-f9eb64eb.jpg" 
+            data-description="Celana denim trendy dengan bahan berkualitas dan desain modern.">
+        <img src="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full/catalog-image/95/MTA-178144322/brd-44261_rockmaker-celana-denim-selvedge-accent-rebel-34_full01-f9eb64eb.jpg" alt="Celana Denim Trend">
+        <h2>Celana Denim Trend</h2>
+        <h5><i class="fas fa-ruler"></i> All Size</h5>
+        <p class="price">Rp 120.000</p>
+        <button class="buy-now-btn"
+                data-id="6"
+                data-name="Celana Denim Trend"
+                data-price="120000"
+                data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full/catalog-image/95/MTA-178144322/brd-44261_rockmaker-celana-denim-selvedge-accent-rebel-34_full01-f9eb64eb.jpg" 
+                onclick="buyNowSingle(event)">Beli Sekarang</button>
+        <button data-id="6" 
+                data-name="Celana Denim Trend" 
+                data-price="120000" 
+                data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full/catalog-image/95/MTA-178144322/brd-44261_rockmaker-celana-denim-selvedge-accent-rebel-34_full01-f9eb64eb.jpg" 
+                onclick="addToCart(event)">Tambah ke Keranjang</button>
+    </div>
+    
+    <!-- Product 7 -->
+    <div class="product-card" 
+            data-id="7" 
+            data-name="Kaos Running" 
+            data-price="65000" 
+            data-image="https://id-test-11.slatic.net/p/01fa79c1a24f9eb458a15eabe859bed8.jpg" 
+            data-description="Kaos dengan harga terjangkau dan kualitas baik untuk bahan runningmu.">
+        <img src="https://id-test-11.slatic.net/p/01fa79c1a24f9eb458a15eabe859bed8.jpg" alt="Kaos Running">
+        <h2>Kaos Running</h2>
+        <h5><i class="fas fa-ruler"></i> All Size</h5>
+        <p class="price">Rp 65.000</p>
+        <button class="buy-now-btn"
+                data-id="7"
+                data-name="Kaos Running"
+                data-price="65000"
+                data-image="https://id-test-11.slatic.net/p/01fa79c1a24f9eb458a15eabe859bed8.jpg" 
+                onclick="buyNowSingle(event)">Beli Sekarang</button>
+        <button data-id="7" 
+                data-name="Kaos Running" 
+                data-price="65000" 
+                data-image="https://id-test-11.slatic.net/p/01fa79c1a24f9eb458a15eabe859bed8.jpg" 
+                onclick="addToCart(event)">Tambah ke Keranjang</button>
+    </div>
+    
+    <!-- Product 8 -->
+    <div class="product-card" 
+            data-id="8" 
+            data-name="Jersey Futsal" 
+            data-price="96000" 
+            data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98x-luvye49dehx0b2" 
+            data-description="Jersey futsal dengan bahan breathable dan desain sporty untuk kenyamanan bermain.">
+        <img src="https://down-id.img.susercontent.com/file/id-11134207-7r98x-luvye49dehx0b2" alt="Jersey Futsal">
+        <h2>Jersey Futsal</h2>
+        <h5><i class="fas fa-ruler"></i> All Size</h5>
+        <p class="price">Rp 96.000</p>
+        <button class="buy-now-btn"
+                data-id="8"
+                data-name="Jersey Futsal"
+                data-price="96000"
+                data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98x-luvye49dehx0b2" 
+                onclick="buyNowSingle(event)">Beli Sekarang</button>
+        <button data-id="8" 
+                data-name="Jersey Futsal" 
+                data-price="96000" 
+                data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98x-luvye49dehx0b2" 
+                onclick="addToCart(event)">Tambah ke Keranjang</button>
+    </div>
+
+            <div class="product-card" 
+            data-id="9" 
+            data-name="Kaos Polo Morwick" 
+            data-price="85000" 
+            data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//104/MTA-72922865/morwick_morwick-kaos-polo-reaper_full01.jpg" 
+            data-description="Kaos polo dengan bahan katun pilihan dan desain modern dari Morwick.">
+        <img src="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//104/MTA-72922865/morwick_morwick-kaos-polo-reaper_full01.jpg" alt="Kaos Polo Morwick">
+        <h2>Kaos Polo Morwick</h2>
+        <h5><i class="fas fa-ruler"></i> All Size</h5>
+        <p class="price">Rp 85.000</p>
+        <button class="buy-now-btn"
+                data-id="9"
+                data-name="Kaos Polo Morwick"
+                data-price="85000"
+                data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//104/MTA-72922865/morwick_morwick-kaos-polo-reaper_full01.jpg" 
+                onclick="buyNowSingle(event)">Beli Sekarang</button>
+        <button data-id="9" 
+                data-name="Kaos Polo Morwick" 
+                data-price="85000" 
+                data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//104/MTA-72922865/morwick_morwick-kaos-polo-reaper_full01.jpg" 
+                onclick="addToCart(event)">Tambah ke Keranjang</button>
+    </div>
+
+            <div class="product-card" 
+            data-id="10" 
+            data-name="Kaos Gym Pria" 
+            data-price="70000" 
+            data-image="https://image.made-in-china.com/202f0j00mZnqMuVEkDkB/High-Quality-Mesh-Fabric-Breathing-Reflective-Stripe-Custom-Logo-Gym-Tshirt-T-Shirt-for-Men.webp" 
+            data-description="Kaos gym dengan bahan mesh breathable untuk kenyamanan berolahraga.">
+            <img src="https://image.made-in-china.com/202f0j00mZnqMuVEkDkB/High-Quality-Mesh-Fabric-Breathing-Reflective-Stripe-Custom-Logo-Gym-Tshirt-T-Shirt-for-Men.webp" alt="Kaos Gym Pria">
+            <h2>Kaos Gym Pria</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 70.000</p>
+            <button class="buy-now-btn"
+                    data-id="10"
+                    data-name="Kaos Gym Pria"
+                    data-price="70000"
+                    data-image="https://image.made-in-china.com/202f0j00mZnqMuVEkDkB/High-Quality-Mesh-Fabric-Breathing-Reflective-Stripe-Custom-Logo-Gym-Tshirt-T-Shirt-for-Men.webp" 
+                    onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="10" 
+                    data-name="Kaos Gym Pria" 
+                    data-price="70000" 
+                    data-image="https://image.made-in-china.com/202f0j00mZnqMuVEkDkB/High-Quality-Mesh-Fabric-Breathing-Reflective-Stripe-Custom-Logo-Gym-Tshirt-T-Shirt-for-Men.webp" 
+                    onclick="addToCart(event)">Tambah ke Keranjang</button>
+        </div>      
+
+        <!-- Produk 11 -->
+            <div class="product-card" 
+            data-id="11" 
+            data-name="Celana Cargo Hijau Army" 
+            data-price="120000" 
+            data-image="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRr2Q8hcBE6hOTcA1UETCNp7SlVN7-MpGsDTQw93HBXCDuEnQcJi-6HAInVqqaDTaygIku5mjiDcKn_YQk7IaoZD-Xqq4NpdmZYRifFk28" 
+            data-description="Celana cargo dengan warna hijau army dan banyak kantong fungsional.">
+            <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRr2Q8hcBE6hOTcA1UETCNp7SlVN7-MpGsDTQw93HBXCDuEnQcJi-6HAInVqqaDTaygIku5mjiDcKn_YQk7IaoZD-Xqq4NpdmZYRifFk28" alt="Celana Cargo Hijau Army">
+            <h2>Celana Cargo Hijau Army</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 120.000</p>
+            <button class="buy-now-btn" data-id="11" data-name="Celana Cargo Hijau Army" data-price="120000" data-image="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRr2Q8hcBE6hOTcA1UETCNp7SlVN7-MpGsDTQw93HBXCDuEnQcJi-6HAInVqqaDTaygIku5mjiDcKn_YQk7IaoZD-Xqq4NpdmZYRifFk28" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="11" data-name="Celana Cargo Hijau Army" data-price="120000" data-image="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRr2Q8hcBE6hOTcA1UETCNp7SlVN7-MpGsDTQw93HBXCDuEnQcJi-6HAInVqqaDTaygIku5mjiDcKn_YQk7IaoZD-Xqq4NpdmZYRifFk28" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 12 -->
+            <div class="product-card" 
+            data-id="12" 
+            data-name="Hooligans Harrington Jacket" 
+            data-price="210000" 
+            data-image="https://hooligans.co.id/cdn/shop/products/HARRY21.2-NAVY_1_600x.jpg?v=1657003290" 
+            data-description="Jaket Harrington premium dari Hooligans dengan bahan berkualitas tinggi.">
+            <img src="https://hooligans.co.id/cdn/shop/products/HARRY21.2-NAVY_1_600x.jpg?v=1657003290" alt="Hooligans Harrington Jacket">
+            <h2>Hooligans Harrington Jacket</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 210.000</p>
+            <button class="buy-now-btn" data-id="12" data-name="Hooligans Harrington Jacket" data-price="210000" data-image="https://hooligans.co.id/cdn/shop/products/HARRY21.2-NAVY_1_600x.jpg?v=1657003290" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="12" data-name="Hooligans Harrington Jacket" data-price="210000" data-image="https://hooligans.co.id/cdn/shop/products/HARRY21.2-NAVY_1_600x.jpg?v=1657003290" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 13 -->
+            <div class="product-card" 
+            data-id="13" 
+            data-name="Kaos Musik Band Distro" 
+            data-price="30000" 
+            data-image="https://down-id.img.susercontent.com/file/sg-11134201-7rbkg-lmd3t05punuh4a" 
+            data-description="Kaos distro dengan desain band musik untuk penampilan kasual yang keren.">
+            <img src="https://down-id.img.susercontent.com/file/sg-11134201-7rbkg-lmd3t05punuh4a" alt="Kaos Musik Band Distro">
+            <h2>Kaos Musik Band Distro</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 30.000</p>
+            <button class="buy-now-btn" data-id="13" data-name="Kaos Musik Band Distro" data-price="30000" data-image="https://down-id.img.susercontent.com/file/sg-11134201-7rbkg-lmd3t05punuh4a" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="13" data-name="Kaos Musik Band Distro" data-price="30000" data-image="https://down-id.img.susercontent.com/file/sg-11134201-7rbkg-lmd3t05punuh4a" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 14 -->
+            <div class="product-card" 
+            data-id="14" 
+            data-name="Jaket Stone Island" 
+            data-price="2800000" 
+            data-image="https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2dpo9pffg3y65@resize_w450_nl.webp" 
+            data-description="Jaket premium dari Stone Island dengan bahan berkualitas tinggi dan desain mewah.">
+            <img src="https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2dpo9pffg3y65@resize_w450_nl.webp" alt="Jaket Stone Island">
+            <h2>Jaket Stone Island</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 2.800.000</p>
+            <button class="buy-now-btn" data-id="14" data-name="Jaket Stone Island" data-price="2800000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2dpo9pffg3y65@resize_w450_nl.webp" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="14" data-name="Jaket Stone Island" data-price="2800000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2dpo9pffg3y65@resize_w450_nl.webp" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 15 -->
+            <div class="product-card" 
+            data-id="15" 
+            data-name="Celana Running Parasut" 
+            data-price="15000" 
+            data-image="https://down-id.img.susercontent.com/file/14f827afb3360e1ab2d2f9921dee1a00" 
+            data-description="Celana running berbahan parasut ringan untuk olahraga yang nyaman harga satuan.">
+            <img src="https://down-id.img.susercontent.com/file/14f827afb3360e1ab2d2f9921dee1a00" alt="Celana Running Parasut">
+            <h2>Celana Running Parasut</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 15.000</p>
+            <button class="buy-now-btn" data-id="15" data-name="Celana Running Parasut" data-price="15000" data-image="https://down-id.img.susercontent.com/file/14f827afb3360e1ab2d2f9921dee1a00" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="15" data-name="Celana Running Parasut" data-price="15000" data-image="https://down-id.img.susercontent.com/file/14f827afb3360e1ab2d2f9921dee1a00" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+        <!-- Produk 16 -->
+            <div class="product-card" 
+            data-id="16" 
+            data-name="Jacket Tracktop Adidas" 
+            data-price="400000" 
+            data-image="https://down-id.img.susercontent.com/file/faab19a3c6eaad62c2a5acddc7d402f3@resize_w450_nl.webp" 
+            data-description="Jacket tracktop Adidas original dengan bahan nyaman dan desain sporty.">
+            <img src="https://down-id.img.susercontent.com/file/faab19a3c6eaad62c2a5acddc7d402f3@resize_w450_nl.webp" alt="Jacket Tracktop Adidas">
+            <h2>Jacket Tracktop Adidas</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 400.000</p>
+            <button class="buy-now-btn" data-id="16" data-name="Jacket Tracktop Adidas" data-price="400000" data-image="https://down-id.img.susercontent.com/file/faab19a3c6eaad62c2a5acddc7d402f3@resize_w450_nl.webp" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="16" data-name="Jacket Tracktop Adidas" data-price="400000" data-image="https://down-id.img.susercontent.com/file/faab19a3c6eaad62c2a5acddc7d402f3@resize_w450_nl.webp" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 17 -->
+            <div class="product-card" 
+            data-id="17" 
+            data-name="Heyfreak T-shirt Oversize H lusta" 
+            data-price="87000" 
+            data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98r-ll6f58jjxwak5d@resize_w450_nl.webp" 
+            data-description="Kaos oversize dari Heysfreak dengan desain H-lusta yang trendy.">
+            <img src="https://down-id.img.susercontent.com/file/id-11134207-7r98r-ll6f58jjxwak5d@resize_w450_nl.webp" alt="Heyfreak T-shirt Oversize H lusta">
+            <h2>Heyfreak T-shirt Oversize H lusta</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 87.000</p>
+            <button class="buy-now-btn" data-id="17" data-name="Heyfreak T-shirt Oversize H lusta" data-price="87000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98r-ll6f58jjxwak5d@resize_w450_nl.webp" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="17" data-name="Heyfreak T-shirt Oversize H lusta" data-price="87000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98r-ll6f58jjxwak5d@resize_w450_nl.webp" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 18 -->
+            <div class="product-card" 
+            data-id="18" 
+            data-name="Kaos Rephatious Loneliness" 
+            data-price="89500" 
+            data-image="https://down-id.img.susercontent.com/file/3b201375c7444e91c7ff1df7282dcb13.webp" 
+            data-description="Kaos dengan desain Rephatious Loneliness yang unik dan stylish.">
+            <img src="https://down-id.img.susercontent.com/file/3b201375c7444e91c7ff1df7282dcb13.webp" alt="Kaos Rephatious Loneliness">
+            <h2>Kaos Rephatious Loneliness</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 89.500</p>
+            <button class="buy-now-btn" data-id="18" data-name="Kaos Rephatious Loneliness" data-price="89500" data-image="https://down-id.img.susercontent.com/file/3b201375c7444e91c7ff1df7282dcb13.webp" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="18" data-name="Kaos Rephatious Loneliness" data-price="89500" data-image="https://down-id.img.susercontent.com/file/3b201375c7444e91c7ff1df7282dcb13.webp" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 19 -->
+            <div class="product-card" 
+            data-id="19" 
+            data-name="Kaos Adidas" 
+            data-price="75000" 
+            data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM_aQwx5h5ECWSlpkPAgGJosR2qIaJJ7Djrg&s" 
+            data-description="Kaos original Adidas dengan bahan katun nyaman untuk sehari-hari.">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM_aQwx5h5ECWSlpkPAgGJosR2qIaJJ7Djrg&s" alt="Kaos Adidas">
+            <h2>Kaos Adidas</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 75.000</p>
+            <button class="buy-now-btn" data-id="19" data-name="Kaos Adidas" data-price="75000" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM_aQwx5h5ECWSlpkPAgGJosR2qIaJJ7Djrg&s" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="19" data-name="Kaos Adidas" data-price="75000" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM_aQwx5h5ECWSlpkPAgGJosR2qIaJJ7Djrg&s" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 20 -->
+            <div class="product-card" 
+            data-id="20" 
+            data-name="Kaos Mixue" 
+            data-price="77700" 
+            data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6suE_y3ZYaAWUAgfjl_NGxK5CyI_y_rz4og&s" 
+            data-description="Kaos dengan desain Mixue yang lucu dan bahan nyaman.">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6suE_y3ZYaAWUAgfjl_NGxK5CyI_y_rz4og&s" alt="Kaos Mixue">
+            <h2>Kaos Mixue</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 77.700</p>
+            <button class="buy-now-btn" data-id="20" data-name="Kaos Mixue" data-price="77700" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6suE_y3ZYaAWUAgfjl_NGxK5CyI_y_rz4og&s" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="20" data-name="Kaos Mixue" data-price="77700" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6suE_y3ZYaAWUAgfjl_NGxK5CyI_y_rz4og&s" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+        <!-- Produk 21 -->
+            <div class="product-card" 
+            data-id="21" 
+            data-name="Kaos Indomaret" 
+            data-price="75000" 
+            data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfybicbjb65Ln9NaRu4nBvb5fsSU2t75uNxg&s" 
+            data-description="Kaos dengan desain Indomaret yang unik dan bahan katun nyaman.">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfybicbjb65Ln9NaRu4nBvb5fsSU2t75uNxg&s" alt="Kaos Indomaret">
+            <h2>Kaos Indomaret</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 75.000</p>
+            <button class="buy-now-btn" data-id="21" data-name="Kaos Indomaret" data-price="75000" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfybicbjb65Ln9NaRu4nBvb5fsSU2t75uNxg&s" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="21" data-name="Kaos Indomaret" data-price="75000" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfybicbjb65Ln9NaRu4nBvb5fsSU2t75uNxg&s" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 22 -->
+            <div class="product-card" 
+            data-id="22" 
+            data-name="Kaos Alfamart" 
+            data-price="76000" 
+            data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98p-lxemznpoxaor42" 
+            data-description="Kaos dengan desain Alfamart yang khas dan bahan katun berkualitas.">
+            <img src="https://down-id.img.susercontent.com/file/id-11134207-7r98p-lxemznpoxaor42" alt="Kaos Alfamart">
+            <h2>Kaos Alfamart</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 76.000</p>
+            <button class="buy-now-btn" data-id="22" data-name="Kaos Alfamart" data-price="76000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98p-lxemznpoxaor42" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="22" data-name="Kaos Alfamart" data-price="76000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98p-lxemznpoxaor42" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 23 -->
+            <div class="product-card" 
+            data-id="23" 
+            data-name="Kaos BCA" 
+            data-price="78500" 
+            data-image="https://cf.shopee.co.id/file/id-11134207-7r98r-lr77kvijdh3haa" 
+            data-description="Kaos dengan logo BCA resmi dan bahan katun premium yang nyaman.">
+            <img src="https://cf.shopee.co.id/file/id-11134207-7r98r-lr77kvijdh3haa" alt="Kaos BCA">
+            <h2>Kaos BCA</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 78.500</p>
+            <button class="buy-now-btn" data-id="23" data-name="Kaos BCA" data-price="78500" data-image="https://cf.shopee.co.id/file/id-11134207-7r98r-lr77kvijdh3haa" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="23" data-name="Kaos BCA" data-price="78500" data-image="https://cf.shopee.co.id/file/id-11134207-7r98r-lr77kvijdh3haa" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 24 -->
+            <div class="product-card" 
+            data-id="24" 
+            data-name="Kaos Aqua" 
+            data-price="78000" 
+            data-image="https://img.lazcdn.com/g/p/105c21bbf766d1ebd4a41e890e8036fd.jpg_720x720q80.jpg" 
+            data-description="Kaos dengan desain Aqua yang fresh dan bahan katun berkualitas.">
+            <img src="https://img.lazcdn.com/g/p/105c21bbf766d1ebd4a41e890e8036fd.jpg_720x720q80.jpg" alt="Kaos Aqua">
+            <h2>Kaos Aqua</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 78.000</p>
+            <button class="buy-now-btn" data-id="24" data-name="Kaos Aqua" data-price="78000" data-image="https://img.lazcdn.com/g/p/105c21bbf766d1ebd4a41e890e8036fd.jpg_720x720q80.jpg" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="24" data-name="Kaos Aqua" data-price="78000" data-image="https://img.lazcdn.com/g/p/105c21bbf766d1ebd4a41e890e8036fd.jpg_720x720q80.jpg" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 25 -->
+            <div class="product-card" 
+            data-id="25" 
+            data-name="Celana Skena" 
+            data-price="160000" 
+            data-image="https://img.lazcdn.com/g/p/1209ef267326035b9f529c16062a8e0e.jpg_360x360q80.jpg_.webp" 
+            data-description="Celana skena dengan desain trendy dan bahan berkualitas tinggi.">
+            <img src="https://img.lazcdn.com/g/p/1209ef267326035b9f529c16062a8e0e.jpg_360x360q80.jpg_.webp" alt="Celana Skena">
+            <h2>Celana Skena</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 160.000</p>
+            <button class="buy-now-btn" data-id="25" data-name="Celana Skena" data-price="160000" data-image="https://img.lazcdn.com/g/p/1209ef267326035b9f529c16062a8e0e.jpg_360x360q80.jpg_.webp" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="25" data-name="Celana Skena" data-price="160000" data-image="https://img.lazcdn.com/g/p/1209ef267326035b9f529c16062a8e0e.jpg_360x360q80.jpg_.webp" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 26 -->
+            <div class="product-card" 
+            data-id="26" 
+            data-name="Celana Cargo Stone Island" 
+            data-price="300000" 
+            data-image="https://img.lazcdn.com/g/ff/kf/Sb2d777395e494d4a9fd7cc6765455ca5U.jpg_720x720q80.jpg" 
+            data-description="Celana cargo premium dari Stone Island dengan bahan berkualitas tinggi.">
+            <img src="https://img.lazcdn.com/g/ff/kf/Sb2d777395e494d4a9fd7cc6765455ca5U.jpg_720x720q80.jpg" alt="Celana Cargo Stone Island">
+            <h2>Celana Cargo Stone Island</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 300.000</p>
+            <button class="buy-now-btn" data-id="26" data-name="Celana Cargo Stone Island" data-price="300000" data-image="https://img.lazcdn.com/g/ff/kf/Sb2d777395e494d4a9fd7cc6765455ca5U.jpg_720x720q80.jpg" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="26" data-name="Celana Cargo Stone Island" data-price="300000" data-image="https://img.lazcdn.com/g/ff/kf/Sb2d777395e494d4a9fd7cc6765455ca5U.jpg_720x720q80.jpg" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 27 -->
+            <div class="product-card" 
+            data-id="27" 
+            data-name="Celana Angel Aseli" 
+            data-price="199900" 
+            data-image="https://down-id.img.susercontent.com/file/5c0fdaa0fadcc387b7222b46115074ea" 
+            data-description="Celana Angel original dengan bahan premium dan desain stylish.">
+            <img src="https://down-id.img.susercontent.com/file/5c0fdaa0fadcc387b7222b46115074ea" alt="Celana Angel Aseli">
+            <h2>Celana Angel Aseli</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 199.900</p>
+            <button class="buy-now-btn" data-id="27" data-name="Celana Angel Aseli" data-price="199900" data-image="https://down-id.img.susercontent.com/file/5c0fdaa0fadcc387b7222b46115074ea" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="27" data-name="Celana Angel Aseli" data-price="199900" data-image="https://down-id.img.susercontent.com/file/5c0fdaa0fadcc387b7222b46115074ea" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 28 -->
+            <div class="product-card" 
+            data-id="28" 
+            data-name="Celana Denim" 
+            data-price="200000" 
+            data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98s-lw00vjqjhing6c@resize_w450_nl.webp" 
+            data-description="Celana denim dengan bahan tebal dan desain klasik yang timeless.">
+            <img src="https://down-id.img.susercontent.com/file/id-11134207-7r98s-lw00vjqjhing6c@resize_w450_nl.webp" alt="Celana Denim">
+            <h2>Celana Denim</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 200.000</p>
+            <button class="buy-now-btn" data-id="28" data-name="Celana Denim" data-price="200000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98s-lw00vjqjhing6c@resize_w450_nl.webp" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="28" data-name="Celana Denim" data-price="200000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98s-lw00vjqjhing6c@resize_w450_nl.webp" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 29 -->
+            <div class="product-card" 
+            data-id="29" 
+            data-name="Kemeja Hitam Lengan Panjang" 
+            data-price="68000" 
+            data-image="https://down-id.img.susercontent.com/file/1a047670dbea2daa8afbe1c12e1890d7" 
+            data-description="Kemeja hitam lengan panjang dengan bahan katun nyaman untuk acara formal.">
+            <img src="https://down-id.img.susercontent.com/file/1a047670dbea2daa8afbe1c12e1890d7" alt="Kemeja Hitam Lengan Panjang">
+            <h2>Kemeja Hitam Lengan Panjang</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 68.000</p>
+            <button class="buy-now-btn" data-id="29" data-name="Kemeja Hitam Lengan Panjang" data-price="68000" data-image="https://down-id.img.susercontent.com/file/1a047670dbea2daa8afbe1c12e1890d7" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="29" data-name="Kemeja Hitam Lengan Panjang" data-price="68000" data-image="https://down-id.img.susercontent.com/file/1a047670dbea2daa8afbe1c12e1890d7" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 30 -->
+            <div class="product-card" 
+            data-id="30" 
+            data-name="Kemeja Hitam Lengan Panjang" 
+            data-price="50000" 
+            data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrU3i-d9xBM_a-cMHqOvcqom3sRipctYjvDQ&s" 
+            data-description="Kemeja hitam lengan panjang dengan harga ekonomis dan bahan nyaman.">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrU3i-d9xBM_a-cMHqOvcqom3sRipctYjvDQ&s" alt="Kemeja Hitam Lengan Panjang">
+            <h2>Kemeja Hitam Lengan Panjang</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 50.000</p>
+            <button class="buy-now-btn" data-id="30" data-name="Kemeja Hitam Lengan Panjang" data-price="50000" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrU3i-d9xBM_a-cMHqOvcqom3sRipctYjvDQ&s" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="30" data-name="Kemeja Hitam Lengan Panjang" data-price="50000" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrU3i-d9xBM_a-cMHqOvcqom3sRipctYjvDQ&s" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 31 -->
+            <div class="product-card" 
+            data-id="31" 
+            data-name="Celana Pendek Pria" 
+            data-price="67000" 
+            data-image="https://bimg.akulaku.net/goods/spu/9d7e90ceb8ea428f91233c5c027edded6596.jpg?w=376&fmt=webp&q=80&fit=1" 
+            data-description="Celana pendek pria dengan bahan nyaman untuk aktivitas sehari-hari.">
+            <img src="https://bimg.akulaku.net/goods/spu/9d7e90ceb8ea428f91233c5c027edded6596.jpg?w=376&fmt=webp&q=80&fit=1" alt="Celana Pendek Pria">
+            <h2>Celana Pendek Pria</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 67.000</p>
+            <button class="buy-now-btn" data-id="31" data-name="Celana Pendek Pria" data-price="67000" data-image="https://bimg.akulaku.net/goods/spu/9d7e90ceb8ea428f91233c5c027edded6596.jpg?w=376&fmt=webp&q=80&fit=1" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="31" data-name="Celana Pendek Pria" data-price="67000" data-image="https://bimg.akulaku.net/goods/spu/9d7e90ceb8ea428f91233c5c027edded6596.jpg?w=376&fmt=webp&q=80&fit=1" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 32 -->
+            <div class="product-card" 
+            data-id="32" 
+            data-name="Jaket Varsity Hoodie" 
+            data-price="250000" 
+            data-image="https://img.lazcdn.com/g/p/2b57248f0dc2433d73581c7fbb307b80.jpg_720x720q80.jpg" 
+            data-description="Jaket varsity style dengan kombinasi hoodie untuk penampilan sporty.">
+            <img src="https://img.lazcdn.com/g/p/2b57248f0dc2433d73581c7fbb307b80.jpg_720x720q80.jpg" alt="Jaket Varsity Hoodie">
+            <h2>Jaket Varsity Hoodie</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 250.000</p>
+            <button class="buy-now-btn" data-id="32" data-name="Jaket Varsity Hoodie" data-price="250000" data-image="https://img.lazcdn.com/g/p/2b57248f0dc2433d73581c7fbb307b80.jpg_720x720q80.jpg" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="32" data-name="Jaket Varsity Hoodie" data-price="250000" data-image="https://img.lazcdn.com/g/p/2b57248f0dc2433d73581c7fbb307b80.jpg_720x720q80.jpg" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 33 -->
+            <div class="product-card" 
+            data-id="33" 
+            data-name="Jaket Parasut TNF" 
+            data-price="500000" 
+            data-image="https://img.id.my-best.com/product_images/6f675b39d28582ed4b1fc75b135f25c5.jpeg?ixlib=rails-4.3.1&q=70&lossless=0&w=800&h=800&fit=clip&s=6dd270144cb3dfc2b3ddc4551b59c79a" 
+            data-description="Jaket parasut The North Face dengan bahan tahan air dan desain outdoor.">
+            <img src="https://img.id.my-best.com/product_images/6f675b39d28582ed4b1fc75b135f25c5.jpeg?ixlib=rails-4.3.1&q=70&lossless=0&w=800&h=800&fit=clip&s=6dd270144cb3dfc2b3ddc4551b59c79a" alt="Jaket Parasut TNF">
+            <h2>Jaket Parasut TNF</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 500.000</p>
+            <button class="buy-now-btn" data-id="33" data-name="Jaket Parasut TNF" data-price="500000" data-image="https://img.id.my-best.com/product_images/6f675b39d28582ed4b1fc75b135f25c5.jpeg?ixlib=rails-4.3.1&q=70&lossless=0&w=800&h=800&fit=clip&s=6dd270144cb3dfc2b3ddc4551b59c79a" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="33" data-name="Jaket Parasut TNF" data-price="500000" data-image="https://img.id.my-best.com/product_images/6f675b39d28582ed4b1fc75b135f25c5.jpeg?ixlib=rails-4.3.1&q=70&lossless=0&w=800&h=800&fit=clip&s=6dd270144cb3dfc2b3ddc4551b59c79a" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 34 -->
+            <div class="product-card" 
+            data-id="34" 
+            data-name="Jaket Harrington" 
+            data-price="200000" 
+            data-image="https://houseofsmith.co.id/wp-content/uploads/2022/11/Hangor-Navy-4-a.jpg" 
+            data-description="Jaket Harrington klasik dengan bahan berkualitas dan desain timeless.">
+            <img src="https://houseofsmith.co.id/wp-content/uploads/2022/11/Hangor-Navy-4-a.jpg" alt="Jaket Harrington">
+            <h2>Jaket Harrington</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 200.000</p>
+            <button class="buy-now-btn" data-id="34" data-name="Jaket Harrington" data-price="200000" data-image="https://houseofsmith.co.id/wp-content/uploads/2022/11/Hangor-Navy-4-a.jpg" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="34" data-name="Jaket Harrington" data-price="200000" data-image="https://houseofsmith.co.id/wp-content/uploads/2022/11/Hangor-Navy-4-a.jpg" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 35 -->
+            <div class="product-card" 
+            data-id="35" 
+            data-name="Jacket Gorpcore Shelter Black" 
+            data-price="200000" 
+            data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98v-lo7q9vtbzkhd16" 
+            data-description="Jaket gorpcore dengan desain shelter hitam yang stylish dan fungsional.">
+            <img src="https://down-id.img.susercontent.com/file/id-11134207-7r98v-lo7q9vtbzkhd16" alt="Jacket Gorpcore Shelter Black">
+            <h2>Jacket Gorpcore Shelter Black</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 200.000</p>
+            <button class="buy-now-btn" data-id="35" data-name="Jacket Gorpcore Shelter Black" data-price="200000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98v-lo7q9vtbzkhd16" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="35" data-name="Jacket Gorpcore Shelter Black" data-price="200000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7r98v-lo7q9vtbzkhd16" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+                <!-- Produk 36 -->
+            <div class="product-card" 
+            data-id="36" 
+            data-name="Jaket Gelembung Stone Island" 
+            data-price="650000" 
+            data-image="https://down-id.img.susercontent.com/file/id-11134207-7r991-lsed068470lpf3" 
+            data-description="Jaket gelembung premium dari Stone Island dengan teknologi bahan mutakhir.">
+            <img src="https://down-id.img.susercontent.com/file/id-11134207-7r991-lsed068470lpf3" alt="Jaket Gelembung Stone Island">
+            <h2>Jaket Gelembung Stone Island</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 650.000</p>
+            <button class="buy-now-btn" data-id="36" data-name="Jaket Gelembung Stone Island" data-price="650000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7r991-lsed068470lpf3" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="36" data-name="Jaket Gelembung Stone Island" data-price="650000" data-image="https://down-id.img.susercontent.com/file/id-11134207-7r991-lsed068470lpf3" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 37 -->
+            <div class="product-card" 
+            data-id="37" 
+            data-name="Jaket Denim" 
+            data-price="180000" 
+            data-image="https://konveksidiamond.com/wp-content/uploads/2023/02/Jaket-denim-jogja.jpeg" 
+            data-description="Jaket denim klasik dengan bahan tebal dan desain timeless.">
+            <img src="https://konveksidiamond.com/wp-content/uploads/2023/02/Jaket-denim-jogja.jpeg" alt="Jaket Denim">
+            <h2>Jaket Denim</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 180.000</p>
+            <button class="buy-now-btn" data-id="37" data-name="Jaket Denim" data-price="180000" data-image="https://konveksidiamond.com/wp-content/uploads/2023/02/Jaket-denim-jogja.jpeg" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="37" data-name="Jaket Denim" data-price="180000" data-image="https://konveksidiamond.com/wp-content/uploads/2023/02/Jaket-denim-jogja.jpeg" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 38 -->
+            <div class="product-card" 
+            data-id="38" 
+            data-name="Kalibre Jaket Parka Black" 
+            data-price="475000" 
+            data-image="https://s3-ap-southeast-1.amazonaws.com/cdn.jarvis-store.com/kalibre-upload/produk/large/20240710-180113.jpeg" 
+            data-description="Jaket parka hitam dari Kalibre dengan bahan tahan air dan desain modern.">
+            <img src="https://s3-ap-southeast-1.amazonaws.com/cdn.jarvis-store.com/kalibre-upload/produk/large/20240710-180113.jpeg" alt="Kalibre Jaket Parka Black">
+            <h2>Kalibre Jaket Parka Black</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 475.000</p>
+            <button class="buy-now-btn" data-id="38" data-name="Kalibre Jaket Parka Black" data-price="475000" data-image="https://s3-ap-southeast-1.amazonaws.com/cdn.jarvis-store.com/kalibre-upload/produk/large/20240710-180113.jpeg" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="38" data-name="Kalibre Jaket Parka Black" data-price="475000" data-image="https://s3-ap-southeast-1.amazonaws.com/cdn.jarvis-store.com/kalibre-upload/produk/large/20240710-180113.jpeg" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 39 -->
+            <div class="product-card" 
+            data-id="39" 
+            data-name="Russ Jacket Bomber" 
+            data-price="180000" 
+            data-image="https://www.russ.co.id/cdn/shop/files/ginee_20230813023530557_6551895950_1024x.png?v=1739795427" 
+            data-description="Jaket bomber dari Russ dengan bahan kulit sintetis dan desain klasik.">
+            <img src="https://www.russ.co.id/cdn/shop/files/ginee_20230813023530557_6551895950_1024x.png?v=1739795427" alt="Russ Jacket Bomber">
+            <h2>Russ Jacket Bomber</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 180.000</p>
+            <button class="buy-now-btn" data-id="39" data-name="Russ Jacket Bomber" data-price="180000" data-image="https://www.russ.co.id/cdn/shop/files/ginee_20230813023530557_6551895950_1024x.png?v=1739795427" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="39" data-name="Russ Jacket Bomber" data-price="180000" data-image="https://www.russ.co.id/cdn/shop/files/ginee_20230813023530557_6551895950_1024x.png?v=1739795427" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+
+            <!-- Produk 40 -->
+            <div class="product-card" 
+            data-id="40" 
+            data-name="Jaket Kulit Asli" 
+            data-price="180000" 
+            data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//100/MTA-24650909/brd-44261_jaket-kulit-asli-pria-100-jaket-kulit-asli-domba-garut_full02.jpg" 
+            data-description="Jaket kulit asli domba Garut dengan kualitas premium dan jahitan rapi.">
+            <img src="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//100/MTA-24650909/brd-44261_jaket-kulit-asli-pria-100-jaket-kulit-asli-domba-garut_full02.jpg" alt="Jaket Kulit Asli">
+            <h2>Jaket Kulit Asli</h2>
+            <h5><i class="fas fa-ruler"></i> All Size</h5>
+            <p class="price">Rp 180.000</p>
+            <button class="buy-now-btn" data-id="40" data-name="Jaket Kulit Asli" data-price="180000" data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//100/MTA-24650909/brd-44261_jaket-kulit-asli-pria-100-jaket-kulit-asli-domba-garut_full02.jpg" onclick="buyNowSingle(event)">Beli Sekarang</button>
+            <button data-id="40" data-name="Jaket Kulit Asli" data-price="180000" data-image="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//100/MTA-24650909/brd-44261_jaket-kulit-asli-pria-100-jaket-kulit-asli-domba-garut_full02.jpg" onclick="addToCart(event)">Tambah ke Keranjang</button>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 T-Shirt Store. All rights reserved.</p>
+    </footer>
+
+    <!-- Tambahkan ini sebelum penutup body -->
+    <div id="cart-notification" class="cart-notification"></div>
+    <script src="script.js"></script>
+</body>
+</html>
+

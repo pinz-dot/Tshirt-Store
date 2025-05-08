@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - Kang Is Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .register-box {
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+        
+        .register-header h1 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .register-header p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            font-size: 0.95rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .register-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background-color 0.3s;
+        }
+        
+        .register-btn:hover {
+            background-color: #219653;
+        }
+        
+        .register-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .register-footer a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-box">
+        <div class="register-header">
+            <h1>DAFTAR AKUN</h1>
+            <p>Buat akun baru untuk mulai berbelanja</p>
+        </div>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="fullname">Nama Lengkap</label>
+                <input type="text" id="fullname" class="form-control" placeholder="Masukkan nama lengkap" required>
+                <div id="nameError" class="error-message"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" class="form-control" placeholder="contoh@email.com" required>
+                <div id="emailError" class="error-message"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Kata Sandi</label>
+                <input type="password" id="password" class="form-control" placeholder="Minimal 6 karakter" required>
+                <div id="passwordError" class="error-message"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Konfirmasi Kata Sandi</label>
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Ulangi kata sandi" required>
+                <div id="confirmError" class="error-message"></div>
+            </div>
+            
+            <button type="submit" class="register-btn">Daftar Sekarang</button>
+        </form>
+        
+        <div class="register-footer">
+            <p>Sudah punya akun? <a href="login.html">Masuk disini</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+            });
+            
+            // Get form values
+            const fullname = document.getElementById('fullname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validation
+            let isValid = true;
+            
+            if (fullname.length < 3) {
+                document.getElementById('nameError').textContent = 'Nama harus minimal 3 karakter';
+                isValid = false;
+            }
+            
+            if (!/^\S+@\S+\.\S+$/.test(email)) {
+                document.getElementById('emailError').textContent = 'Email tidak valid';
+                isValid = false;
+            }
+            
+            if (password.length < 6) {
+                document.getElementById('passwordError').textContent = 'Kata sandi harus minimal 6 karakter';
+                isValid = false;
+            }
+            
+            if (password !== confirmPassword) {
+                document.getElementById('confirmError').textContent = 'Kata sandi tidak cocok';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Check if email already registered
+                let registeredEmails = JSON.parse(localStorage.getItem('registeredEmails')) || [];
+                if (registeredEmails.includes(email)) {
+                    document.getElementById('emailError').textContent = 'Email sudah terdaftar';
+                    return;
+                }
+                
+                // Save user data
+                const userData = {
+                    fullname: fullname,
+                    email: email,
+                    password: password
+                };
+                
+                localStorage.setItem('user_' + email, JSON.stringify(userData));
+                
+                // Add to registered emails
+                registeredEmails.push(email);
+                localStorage.setItem('registeredEmails', JSON.stringify(registeredEmails));
+                
+                // Set as current user
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+                
+                alert('Pendaftaran berhasil! Anda akan diarahkan ke halaman utama.');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

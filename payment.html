@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Kang Is Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Checkout Pembayaran</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="order-summary">
+            <h2><i class="fas fa-shopping-bag"></i> Ringkasan Pesanan</h2>
+            <div id="order-items-container">
+                <ul id="order-items"></ul>
+                <div class="empty-cart-message">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Keranjang belanja kosong</p>
+                </div>
+            </div>
+            </div>
+            <div class="order-total">
+                <strong>Total: <span id="total-price">Rp 0</span></strong>
+            </div>
+        </section>
+
+        <section class="payment-section">
+            <h2><i class="fas fa-credit-card"></i> Informasi Pembayaran</h2>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="customer-name">Nama Lengkap</label>
+                    <input type="text" id="customer-name" required placeholder="Nama penerima">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-address">Alamat Lengkap</label>
+                    <textarea id="customer-address" rows="3" required placeholder="Alamat pengiriman"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-notes">Catatan (Opsional)</label>
+                    <input type="text" id="customer-notes" placeholder="Catatan untuk penjual">
+                </div>
+
+                <div class="form-group">
+                    <label>Metode Pembayaran</label>
+                    <div class="payment-methods">
+                        <div class="payment-method">
+                            <input type="radio" id="bank-transfer" name="payment-method" value="bank" required>
+                            <label for="bank-transfer">
+                                <i class="fas fa-university"></i> Transfer Bank
+                            </label>
+                        </div>
+                        
+                        <div class="payment-method">
+                            <input type="radio" id="e-wallet" name="payment-method" value="ewallet">
+                            <label for="e-wallet">
+                                <i class="fas fa-wallet"></i> E-Wallet
+                            </label>
+                        </div>
+                        
+                        <div class="payment-method">
+                            <input type="radio" id="cod" name="payment-method" value="cod">
+                            <label for="cod">
+                                <i class="fas fa-money-bill-wave"></i> COD (Bayar di Tempat)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bank-details" class="payment-details hidden">
+                    <div class="form-group">
+                        <label for="bank-select">Pilih Bank</label>
+                        <select id="bank-select" class="form-control">
+                            <option value="bni">BNI - 1234567890</option>
+                            <option value="bri">BRI - 0987654321</option>
+                            <option value="mandiri">Mandiri - 5647382910</option>
+                        </select>
+                    </div>
+                    <div class="bank-note">
+                        <p><i class="fas fa-info-circle"></i> Harap transfer tepat sampai 3 digit terakhir</p>
+                    </div>
+                </div>
+
+                <div id="ewallet-details" class="payment-details hidden">
+                    <div class="form-group">
+                        <label for="ewallet-select">Pilih E-Wallet</label>
+                        <select id="ewallet-select" class="form-control">
+                            <option value="gopay">GoPay - 089653403277</option>
+                            <option value="dana">DANA - 089653403277</option>
+                            <option value="ovo">OVO - 081391405190</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="cod-details" class="payment-details hidden">
+                    <div class="cod-note">
+                        <p><i class="fas fa-info-circle"></i> Pembayaran dilakukan saat barang diterima</p>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-payment">
+                    <i class="fas fa-lock"></i> Bayar Sekarang
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Kang Is Store. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="payment.js"></script>
+</body>
+</html>

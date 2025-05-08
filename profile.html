@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Saya - Kang Is Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Gaya dasar profil */
+        .profile-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .avatar-container {
+            position: relative;
+            margin-right: 2rem;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #666;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .upload-btn:hover {
+            background: #2980b9;
+        }
+        
+        .profile-info h2 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+        
+        .profile-info p {
+            margin: 0.5rem 0 0;
+            color: #7f8c8d;
+        }
+        
+        /* Tab menu */
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 2rem;
+        }
+        
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            cursor: pointer;
+            color: #7f8c8d;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        /* Gaya untuk form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        /* Gaya untuk riwayat transaksi */
+        .order-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .order-date {
+            color: #7f8c8d;
+        }
+        
+        .order-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-completed {
+            background-color: #e3f9e5;
+            color: #219653;
+        }
+        
+        .order-items {
+            margin-top: 1rem;
+        }
+        
+        .order-item {
+            display: flex;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .order-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+        
+        .order-total {
+            text-align: right;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        
+        /* Animasi */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Responsif */
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .avatar-container {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .profile-tabs {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Profil Saya</h1>
+            <div class="user-actions">
+                <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Kembali</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="avatar-container">
+                    <div class="profile-avatar" id="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="upload-btn" id="upload-trigger">
+                        <i class="fas fa-camera"></i>
+                        <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                    </button>
+                </div>
+                <div class="profile-info" id="profile-info">
+                    <h2>Loading...</h2>
+                    <p>Member sejak: Loading...</p>
+                </div>
+            </div>
+            
+            <div class="profile-tabs">
+                <button class="tab-btn active" data-tab="info">Info Profil</button>
+                <button class="tab-btn" data-tab="orders">Riwayat Transaksi</button>
+                <button class="tab-btn" data-tab="security">Keamanan</button>
+            </div>
+            
+            <!-- Tab Info Profil -->
+            <div id="info-tab" class="tab-content active">
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="fullname">Nama Lengkap</label>
+                        <input type="text" id="fullname" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Nomor Telepon</label>
+                        <input type="tel" id="phone" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Alamat</label>
+                        <textarea id="address" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="profile-btn edit-btn">
+                        <i class="fas fa-save"></i> Simpan Perubahan
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Tab Riwayat Transaksi -->
+            <div id="orders-tab" class="tab-content">
+                <div id="orders-list">
+                    <p>Memuat riwayat transaksi...</p>
+                </div>
+            </div>
+            
+            <!-- Tab Keamanan -->
+            <div id="security-tab" class="tab-content">
+                <form id="password-form">
+                    <div class="form-group">
+                        <label for="current-password">Password Saat Ini</label>
+                        <input type="password" id="current-password" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-password">Password Baru</label>
+                        <input type="password" id="new-password" class="form-control" required minlength="6">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Konfirmasi Password Baru</label>
+                        <input type="password" id="confirm-password" class="form-control" required minlength="6">
+                    </div>
+                    
+                    <button type="submit" class="profile-btn edit-btn">
+                        <i class="fas fa-lock"></i> Ubah Password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Preview Avatar -->
+    <div id="avatar-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Ubah Foto Profil</h2>
+            <div id="avatar-preview" style="width: 100%; height: 300px; background-color: #f5f5f5; margin: 1rem 0; background-size: contain; background-position: center; background-repeat: no-repeat;"></div>
+            <button id="save-avatar" class="profile-btn edit-btn" style="width: 100%;">
+                <i class="fas fa-check"></i> Simpan Foto
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Kang Is Store. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ambil data user dari localStorage
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            const userOrders = JSON.parse(localStorage.getItem('user_orders_' + currentUser?.email)) || [];
+            
+            if (!currentUser || !currentUser.email) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Load avatar jika ada
+            if (currentUser.avatar) {
+                document.getElementById('profile-avatar').style.backgroundImage = `url(${currentUser.avatar})`;
+                document.getElementById('profile-avatar').innerHTML = '';
+            }
+            
+            // Isi data profil
+            document.getElementById('profile-info').innerHTML = `
+                <h2>${currentUser.fullname || 'Pengguna'}</h2>
+                <p>Member sejak: ${new Date(currentUser.joinDate || Date.now()).toLocaleDateString('id-ID')}</p>
+            `;
+            
+            // Isi form profil
+            document.getElementById('fullname').value = currentUser.fullname || '';
+            document.getElementById('email').value = currentUser.email || '';
+            document.getElementById('phone').value = currentUser.phone || '';
+            document.getElementById('address').value = currentUser.address || '';
+            
+            // Tab functionality
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // Load orders
+            loadOrders();
+            
+            // Profile form submission
+            document.getElementById('profile-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Update user data
+                currentUser.fullname = document.getElementById('fullname').value;
+                currentUser.phone = document.getElementById('phone').value;
+                currentUser.address = document.getElementById('address').value;
+                
+                // Save to localStorage
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                localStorage.setItem('user_' + currentUser.email, JSON.stringify(currentUser));
+                
+                // Update profile info
+                document.getElementById('profile-info').innerHTML = `
+                    <h2>${currentUser.fullname}</h2>
+                    <p>Member sejak: ${new Date(currentUser.joinDate || Date.now()).toLocaleDateString('id-ID')}</p>
+                `;
+                
+                alert('Profil berhasil diperbarui!');
+            });
+            
+            // Password form submission
+            document.getElementById('password-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                if (currentUser.password !== currentPassword) {
+                    alert('Password saat ini salah!');
+                    return;
+                }
+                
+                if (newPassword !== confirmPassword) {
+                    alert('Konfirmasi password tidak cocok!');
+                    return;
+                }
+                
+                if (newPassword.length < 6) {
+                    alert('Password harus minimal 6 karakter!');
+                    return;
+                }
+                
+                // Update password
+                currentUser.password = newPassword;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                localStorage.setItem('user_' + currentUser.email, JSON.stringify(currentUser));
+                
+                // Reset form
+                this.reset();
+                
+                alert('Password berhasil diubah!');
+            });
+            
+            // Avatar upload
+            const avatarUpload = document.getElementById('avatar-upload');
+            const avatarModal = document.getElementById('avatar-modal');
+            const avatarPreview = document.getElementById('avatar-preview');
+            const closeModal = document.querySelector('.close-modal');
+            const saveAvatarBtn = document.getElementById('save-avatar');
+            
+            document.getElementById('upload-trigger').addEventListener('click', function() {
+                avatarUpload.click();
+            });
+            
+            avatarUpload.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        avatarPreview.style.backgroundImage = `url(${event.target.result})`;
+                        avatarModal.style.display = 'block';
+                    }
+                    
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+            
+            closeModal.addEventListener('click', function() {
+                avatarModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === avatarModal) {
+                    avatarModal.style.display = 'none';
+                }
+            });
+            
+            saveAvatarBtn.addEventListener('click', function() {
+                const avatarUrl = avatarPreview.style.backgroundImage.slice(4, -1).replace(/"/g, "");
+                
+                // Update user avatar
+                currentUser.avatar = avatarUrl;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                localStorage.setItem('user_' + currentUser.email, JSON.stringify(currentUser));
+                
+                // Update avatar display
+                document.getElementById('profile-avatar').style.backgroundImage = `url(${avatarUrl})`;
+                document.getElementById('profile-avatar').innerHTML = '';
+                
+                avatarModal.style.display = 'none';
+                avatarUpload.value = '';
+                
+                alert('Foto profil berhasil diubah!');
+            });
+        });
+        
+        function loadOrders() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            const userOrders = JSON.parse(localStorage.getItem('user_orders_' + currentUser.email)) || [];
+            const ordersList = document.getElementById('orders-list');
+            
+            if (userOrders.length === 0) {
+                ordersList.innerHTML = '<p>Anda belum memiliki transaksi</p>';
+                return;
+            }
+            
+            ordersList.innerHTML = '';
+            
+            userOrders.forEach(order => {
+                const orderDate = new Date(order.date);
+                const orderElement = document.createElement('div');
+                orderElement.className = 'order-card';
+                
+                let itemsHtml = '';
+                order.items.forEach(item => {
+                    itemsHtml += `
+                        <div class="order-item">
+                            <img src="${item.image}" alt="${item.name}">
+                            <div>
+                                <div>${item.name}</div>
+                                <div>${item.quantity}x Rp ${formatRupiah(item.price)}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                orderElement.innerHTML = `
+                    <div class="order-header">
+                        <div class="order-date">${orderDate.toLocaleDateString('id-ID')} • ${orderDate.toLocaleTimeString('id-ID')}</div>
+                        <div class="order-status status-completed">Selesai</div>
+                    </div>
+                    <div class="order-items">
+                        ${itemsHtml}
+                    </div>
+                    <div class="order-total">
+                        Total: Rp ${formatRupiah(order.total)}
+                    </div>
+                `;
+                
+                ordersList.appendChild(orderElement);
+            });
+        }
+        
+        function formatRupiah(angka) {
+            return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+    </script>
+</body>
+</html>
